@@ -1,19 +1,27 @@
 from django.db import models
 from django.urls import reverse
 from django.utils.text import slugify
+from django.core.validators import MaxValueValidator, MinValueValidator
 
-# Create your models here.
 
 class Movie(models.Model):
-    name = models.CharField(max_length=40)
-    rating = models.IntegerField()
-    year = models.IntegerField(null=True)
-    budget = models.IntegerField(default=1000000)
-    slug = models.SlugField(default='', null=False, db_index=True)
+    EUR = 'EUR'
+    USD = 'USD'
+    RUB = 'RUB'
+    CURRENCY_CHOICES = [
+        ('EUR', 'Euro'),
+        ('USD', 'Dollar'),
+        ('RUB', 'Rubbles'),
+    ]
 
-    def save(self, *args, **kwargs):
-        self.slug = slugify(self.name)
-        super(Movie, self).save(*args, **kwargs)
+    name = models.CharField(max_length=40)
+    rating = models.IntegerField(validators=[MinValueValidator(1),
+                                             MaxValueValidator(100)])
+    year = models.IntegerField(null=True, blank=True)
+    budget = models.IntegerField(default=1000000, blank=True,  # when you set 'blank=True' the field becomes optional
+                                 validators=[MinValueValidator(1)])
+    currency = models.CharField(max_length=3, choices=CURRENCY_CHOICES, default='RUB')
+    slug = models.SlugField(default='', null=False, db_index=True)
 
     def get_url(self):
         return reverse('movie-detail', args=[self.slug])
@@ -22,4 +30,3 @@ class Movie(models.Model):
         return f'{self.name} - {self.rating}%'
 
 
-# from movie_app.models import Movie
