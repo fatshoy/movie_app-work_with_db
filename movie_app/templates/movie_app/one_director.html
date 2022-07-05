@@ -1,0 +1,18 @@
+
+{% extends 'movie_app/base.html' %}
+
+{% block title %} Info about director - {{director.last_name}} {% endblock %}
+
+{% block content %}
+    <h2>Director</h2>
+    <h3>Name - {{director.first_name}}</h3>
+    <h3>Surname - {{director.last_name}}</h3>
+    <h3>Email - {{director.director_email}}</h3>
+    <hr>
+    <h3>List of films</h3>
+    <ul>
+            {% for film in director.movies.all %}
+            <li><a href="{{film.get_url}}">{{film}}</a></li>
+            {% endfor %}
+    </ul>
+{% endblock %}

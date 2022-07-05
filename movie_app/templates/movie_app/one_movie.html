@@ -8,4 +8,17 @@
     <h3>Rating {{movie.rating}}</h3>
     <h3>Budget {{movie.budget}}</h3>
     <h3>Year {{movie.year}}</h3>
+    <hr>
+    <h3>Info about director</h3>
+    <h3>Name -  {{movie.director.first_name}}</h3>
+    <h3>Surname -  {{movie.director.last_name}}</h3>
+    <h3>Email -  {{movie.director.director_email}}</h3>
+    <a href="{{movie.director.get_url}}">Link to director's page</a>
+    <hr>
+    <h3>List of actors</h3>
+    <ul>
+            {% for actor in movie.actors.all %}
+            <li><a href="{{actor.get_url}}">{{actor}}</a></li>
+            {% endfor %}
+    </ul>
 {% endblock %}

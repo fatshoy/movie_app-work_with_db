@@ -1,6 +1,14 @@
 from django.contrib import admin, messages
-from .models import Movie
+from .models import Movie, Director, Actor, DressingRoom
 from django.db.models import QuerySet
+
+admin.site.register(Director)
+admin.site.register(Actor)
+
+
+@admin.register(DressingRoom)
+class DressingRoomAdmin(admin.ModelAdmin):
+    list_display = ['floor', 'number', 'actor']
 
 
 class RatingFilter(admin.SimpleListFilter):  # create own filter
@@ -32,9 +40,10 @@ class MovieAdmin(admin.ModelAdmin):
     # exclude = ['slug']  # element form will contain all fields except specified
     # readonly_fields = ['year']  # specified fields changing forbidden
     prepopulated_fields = {'slug': ('name',)}  # autocomplete 'slug' field on 'name' field base
-    list_display = ['name', 'rating', 'currency', 'budget',
+    list_display = ['name', 'rating', 'director', 'budget',
                     'rating_status']  # first field (here 'name') must be link to element form, therefore it can't be 'editable' (see below)
-    list_editable = ['rating', 'currency', 'budget']  # fields, you can change on the main panel
+    list_editable = ['rating', 'director', 'budget']  # fields, you can change on the main panel
+    filter_horizontal = ['actors']
     ordering = ['-rating', 'name']  # original sorting when you open the main panel
     list_per_page = 10  # max amount of objects, which will displayed on the main panel
     actions = ['set_dollars',
@@ -66,4 +75,4 @@ class MovieAdmin(admin.ModelAdmin):
             messages.ERROR  # set red color of pop-up
         )
 
-# admin.site.register(Movie, MovieAdmin) - it's like a decorator  '@admin.register(Movie)'
+# admin.site.register(Movie, MovieAdmin) == decorator  '@admin.register(Movie)'
